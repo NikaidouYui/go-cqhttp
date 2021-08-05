@@ -1,4 +1,5 @@
-// +build !arm,!arm64,!amd64,!386
+//go:build (!arm && !arm64 && !amd64 && !386) || race
+// +build !arm,!arm64,!amd64,!386 race
 
 package codec
 

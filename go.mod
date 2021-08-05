@@ -4,14 +4,14 @@ go 1.16
 
 require (
 	github.com/Baozisoftware/qrcode-terminal-go v0.0.0-20170407111555-c0650d8dff0f
-	github.com/Mrs4s/MiraiGo v0.0.0-20210525010101-8f0cd9494d64
+	github.com/Microsoft/go-winio v0.5.0
+	github.com/Mrs4s/MiraiGo v0.0.0-20210726103104-1d68826cef0e
 	github.com/dustin/go-humanize v1.0.0
-	github.com/gin-contrib/pprof v1.3.0
-	github.com/gin-gonic/gin v1.7.1
+	github.com/gabriel-vasile/mimetype v1.3.1 // indirect
 	github.com/gorilla/websocket v1.4.2
-	github.com/guonaihong/gout v0.1.9
+	github.com/guonaihong/gout v0.2.1
 	github.com/jonboulle/clockwork v0.2.2 // indirect
-	github.com/json-iterator/go v1.1.10
+	github.com/json-iterator/go v1.1.11
 	github.com/kardianos/osext v0.0.0-20190222173326-2bc1f35cddc0
 	github.com/lestrrat-go/file-rotatelogs v2.4.0+incompatible
 	github.com/lestrrat-go/strftime v1.0.4 // indirect
@@ -22,12 +22,15 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/syndtr/goleveldb v1.0.0
 	github.com/t-tomalak/logrus-easy-formatter v0.0.0-20190827215021-c074f06c5816
-	github.com/tidwall/gjson v1.7.5
+	github.com/tidwall/gjson v1.8.1
 	github.com/tuotoo/qrcode v0.0.0-20190222102259-ac9c44189bf2
 	github.com/wdvxdr1123/go-silk v0.0.0-20210316130616-d47b553def60
-	github.com/willf/bitset v1.1.11 // indirect
-	golang.org/x/crypto v0.0.0-20210421170649-83a5a9bb288b
-	golang.org/x/term v0.0.0-20210422114643-f5beecf764ed
-	golang.org/x/time v0.0.0-20210220033141-f8bda1e9f3ba
+	github.com/willf/bitset v1.2.0 // indirect
+	golang.org/x/crypto v0.0.0-20210616213533-5ff15b29337e
+	golang.org/x/image v0.0.0-20210628002857-a66eb6448b8d // indirect
+	golang.org/x/term v0.0.0-20210615171337-6886f2dfbf5b
+	golang.org/x/time v0.0.0-20210611083556-38a9dc6acbc6
 	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b
 )
+
+replace github.com/willf/bitset v1.2.0 => github.com/bits-and-blooms/bitset v1.2.0

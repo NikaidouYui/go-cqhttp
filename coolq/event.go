@@ -2,7 +2,7 @@ package coolq
 
 import (
 	"encoding/hex"
-	"io/ioutil"
+	"os"
 	"path"
 	"strconv"
 	"strings"
@@ -542,59 +542,26 @@ func (bot *CQBot) groupDecrease(groupCode, userUin int64, operator *client.Group
 func (bot *CQBot) checkMedia(e []message.IMessageElement) {
 	for _, elem := range e {
 		switch i := elem.(type) {
-		case *message.ImageElement:
-			filename := hex.EncodeToString(i.Md5) + ".image"
-			if !global.PathExists(path.Join(global.ImagePath, filename)) {
-				_ = ioutil.WriteFile(path.Join(global.ImagePath, filename), binary.NewWriterF(func(w *binary.Writer) {
-					w.Write(i.Md5)
-					w.WriteUInt32(uint32(i.Size))
-					w.WriteString(i.Filename)
-					w.WriteString(i.Url)
-				}), 0o644)
-			}
-			i.Filename = filename
 		case *message.GroupImageElement:
 			filename := hex.EncodeToString(i.Md5) + ".image"
 			if !global.PathExists(path.Join(global.ImagePath, filename)) {
-				_ = ioutil.WriteFile(path.Join(global.ImagePath, filename), binary.NewWriterF(func(w *binary.Writer) {
+				_ = os.WriteFile(path.Join(global.ImagePath, filename), binary.NewWriterF(func(w *binary.Writer) {
 					w.Write(i.Md5)
 					w.WriteUInt32(uint32(i.Size))
-					w.WriteString(filename)
+					w.WriteString(i.ImageId)
 					w.WriteString(i.Url)
 				}), 0o644)
 			}
 		case *message.FriendImageElement:
 			filename := hex.EncodeToString(i.Md5) + ".image"
 			if !global.PathExists(path.Join(global.ImagePath, filename)) {
-				_ = ioutil.WriteFile(path.Join(global.ImagePath, filename), binary.NewWriterF(func(w *binary.Writer) {
+				_ = os.WriteFile(path.Join(global.ImagePath, filename), binary.NewWriterF(func(w *binary.Writer) {
 					w.Write(i.Md5)
-					w.WriteUInt32(uint32(0)) // 发送时会调用url, 大概没事
-					w.WriteString(filename)
+					w.WriteUInt32(uint32(i.Size))
+					w.WriteString(i.ImageId)
 					w.WriteString(i.Url)
 				}), 0o644)
 			}
-		case *message.GroupFlashImgElement:
-			filename := hex.EncodeToString(i.Md5) + ".image"
-			if !global.PathExists(path.Join(global.ImagePath, filename)) {
-				_ = ioutil.WriteFile(path.Join(global.ImagePath, filename), binary.NewWriterF(func(w *binary.Writer) {
-					w.Write(i.Md5)
-					w.WriteUInt32(uint32(i.Size))
-					w.WriteString(i.Filename)
-					w.WriteString("")
-				}), 0o644)
-			}
-			i.Filename = filename
-		case *message.FriendFlashImgElement:
-			filename := hex.EncodeToString(i.Md5) + ".image"
-			if !global.PathExists(path.Join(global.ImagePath, filename)) {
-				_ = ioutil.WriteFile(path.Join(global.ImagePath, filename), binary.NewWriterF(func(w *binary.Writer) {
-					w.Write(i.Md5)
-					w.WriteUInt32(uint32(i.Size))
-					w.WriteString(i.Filename)
-					w.WriteString("")
-				}), 0o644)
-			}
-			i.Filename = filename
 		case *message.VoiceElement:
 			i.Name = strings.ReplaceAll(i.Name, "{", "")
 			i.Name = strings.ReplaceAll(i.Name, "}", "")
@@ -604,12 +571,12 @@ func (bot *CQBot) checkMedia(e []message.IMessageElement) {
 					log.Warnf("语音文件 %v 下载失败: %v", i.Name, err)
 					continue
 				}
-				_ = ioutil.WriteFile(path.Join(global.VoicePath, i.Name), b, 0o644)
+				_ = os.WriteFile(path.Join(global.VoicePath, i.Name), b, 0o644)
 			}
 		case *message.ShortVideoElement:
 			filename := hex.EncodeToString(i.Md5) + ".video"
 			if !global.PathExists(path.Join(global.VideoPath, filename)) {
-				_ = ioutil.WriteFile(path.Join(global.VideoPath, filename), binary.NewWriterF(func(w *binary.Writer) {
+				_ = os.WriteFile(path.Join(global.VideoPath, filename), binary.NewWriterF(func(w *binary.Writer) {
 					w.Write(i.Md5)
 					w.Write(i.ThumbMd5)
 					w.WriteUInt32(uint32(i.Size))
