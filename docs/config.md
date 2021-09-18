@@ -32,7 +32,6 @@ heartbeat:
   # -1 为关闭心跳
   interval: 5
 
-message:
   # 上报数据类型
   # 可选: string,array
   post-format: string
@@ -48,6 +47,12 @@ message:
   proxy-rewrite: ''
   # 是否上报自身消息
   report-self-message: false
+  # 移除服务端的Reply附带的At
+  remove-reply-at: false
+  # 为Reply附加更多信息
+  extra-reply-data: false
+  # 跳过 Mime 扫描, 忽略错误数据
+  skip-mime-scan: false
 
 output:
   # 日志等级 trace,debug,info,warn,error
@@ -119,6 +124,12 @@ servers:
       host: 127.0.0.1
       # pprof服务器监听端口
       port: 7700
+      
+  # LambdaServer 配置
+  - lambda:
+      type: scf # 可用 scf,aws (aws未经过测试)
+      middlewares:
+        <<: *default # 引用默认中间件
 
   # 可添加更多
   #- ws-reverse:
@@ -142,6 +153,8 @@ database: # 数据库相关设置
 > 注3: 分片发送为原酷Q发送长消息的老方案, 发送速度更优/兼容性更好，但在有发言频率限制的群里，可能无法发送。关闭后将优先使用新方案, 能发送更长的消息, 但发送速度更慢，在部分老客户端将无法解析.
 
 > 注4：关闭心跳服务可能引起断线，请谨慎关闭
+
+> 注5：关于MINE扫描， 详见[MINE](file.md#MINE)
 
 ## 在线状态
 
@@ -209,3 +222,14 @@ database: # 数据库相关设置
 1.1.1.1:53
 1.1.2.2:8899
 ````
+
+## 云函数部署
+
+使用CustomRuntime进行部署， bootstrap 文件在 `scripts/bootstrap` 中已给出。
+在部署前，请在本地完成登录，并将 `config.yml` ， `device.json` ，`bootstrap` 和 `go-cqhttp`
+一起打包。
+
+在触发器中创建一个API网关触发器，并启用集成响应，创建完成后即可通过api网关访问go-cqhttp(建议配置 AccessToken)。
+
+> scripts/bootstrap 中使用的工作路径为 /tmp, 这个目录最大能容下500M文件, 如需长期使用，
+> 请挂载文件存储(CFS).

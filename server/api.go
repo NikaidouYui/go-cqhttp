@@ -32,8 +32,16 @@ func getFriendList(bot *coolq.CQBot, _ resultGetter) coolq.MSG {
 	return bot.CQGetFriendList()
 }
 
+func getUnidirectionalFriendList(bot *coolq.CQBot, _ resultGetter) coolq.MSG {
+	return bot.CQGetUnidirectionalFriendList()
+}
+
 func deleteFriend(bot *coolq.CQBot, p resultGetter) coolq.MSG {
-	return bot.CQDeleteFriend(p.Get("id").Int())
+	return bot.CQDeleteFriend(p.Get("[user_id,id]").Int())
+}
+
+func deleteUnidirectionalFriend(bot *coolq.CQBot, p resultGetter) coolq.MSG {
+	return bot.CQDeleteUnidirectionalFriend(p.Get("user_id").Int())
 }
 
 func getGroupList(bot *coolq.CQBot, p resultGetter) coolq.MSG {
@@ -271,7 +279,7 @@ func deleteGroupFolder(bot *coolq.CQBot, p resultGetter) coolq.MSG {
 }
 
 func deleteGroupFile(bot *coolq.CQBot, p resultGetter) coolq.MSG {
-	return bot.CQGroupFileDeleteFile(p.Get("group_id").Int(), p.Get("folder_id").Str, p.Get("file_id").Str, int32(p.Get("bus_id").Int()))
+	return bot.CQGroupFileDeleteFile(p.Get("group_id").Int(), p.Get("file_id").Str, int32(p.Get("bus_id").Int()))
 }
 
 func getGroupMsgHistory(bot *coolq.CQBot, p resultGetter) coolq.MSG {
@@ -350,69 +358,76 @@ func setModelShow(bot *coolq.CQBot, p resultGetter) coolq.MSG {
 	return bot.CQSetModelShow(p.Get("model").String(), p.Get("model_show").String())
 }
 
+func markMSGAsRead(bot *coolq.CQBot, p resultGetter) coolq.MSG {
+	return bot.CQMarkMessageAsRead(int32(p.Get("message_id").Int()))
+}
+
 // API 是go-cqhttp当前支持的所有api的映射表
 var API = map[string]func(*coolq.CQBot, resultGetter) coolq.MSG{
-	"get_login_info":             getLoginInfo,
-	"get_friend_list":            getFriendList,
-	"delete_friend":              deleteFriend,
-	"get_group_list":             getGroupList,
-	"get_group_info":             getGroupInfo,
-	"get_group_member_list":      getGroupMemberList,
-	"get_group_member_info":      getGroupMemberInfo,
-	"send_msg":                   sendMSG,
-	"send_group_msg":             sendGroupMSG,
-	"send_group_forward_msg":     sendGroupForwardMSG,
-	"send_private_msg":           sendPrivateMSG,
-	"delete_msg":                 deleteMSG,
-	"set_friend_add_request":     setFriendAddRequest,
-	"set_group_add_request":      setGroupAddRequest,
-	"set_group_card":             setGroupCard,
-	"set_group_special_title":    setGroupSpecialTitle,
-	"set_group_kick":             setGroupKick,
-	"set_group_ban":              setGroupBan,
-	"set_group_whole_ban":        setGroupWholeBan,
-	"set_group_name":             setGroupName,
-	"set_group_admin":            setGroupAdmin,
-	"_send_group_notice":         sendGroupNotice,
-	"set_group_leave":            setGroupLeave,
-	"get_image":                  getImage,
-	"get_forward_msg":            getForwardMSG,
-	"get_msg":                    getMSG,
-	"download_file":              downloadFile,
-	"get_group_honor_info":       getGroupHonorInfo,
-	"set_restart":                setRestart,
-	"can_send_image":             canSendImage,
-	"can_send_record":            canSendRecord,
-	"get_stranger_info":          getStrangerInfo,
-	"get_status":                 getStatus,
-	"get_version_info":           getVersionInfo,
-	"get_group_system_msg":       getGroupSystemMSG,
-	"get_group_file_system_info": getGroupFileSystemInfo,
-	"get_group_root_files":       getGroupRootFiles,
-	"get_group_files_by_folder":  getGroupFilesByFolder,
-	"get_group_file_url":         getGroupFileURL,
-	"create_group_file_folder":   groupFileCreateFolder,
-	"delete_group_folder":        deleteGroupFolder,
-	"delete_group_file":          deleteGroupFile,
-	"upload_group_file":          uploadGroupFile,
-	"get_group_msg_history":      getGroupMsgHistory,
-	"_get_vip_info":              getVipInfo,
-	"reload_event_filter":        reloadEventFilter,
-	".ocr_image":                 ocrImage,
-	"ocr_image":                  ocrImage,
-	"get_group_at_all_remain":    getGroupAtAllRemain,
-	"get_online_clients":         getOnlineClients,
-	".get_word_slices":           getWordSlices,
-	"set_group_portrait":         setGroupPortrait,
-	"set_essence_msg":            setEssenceMSG,
-	"delete_essence_msg":         deleteEssenceMSG,
-	"get_essence_msg_list":       getEssenceMsgList,
-	"check_url_safely":           checkURLSafely,
-	"set_group_anonymous_ban":    setGroupAnonymousBan,
-	".handle_quick_operation":    handleQuickOperation,
-	"qidian_get_account_info":    getQiDianAccountInfo,
-	"_get_model_show":            getModelShow,
-	"_set_model_show":            setModelShow,
+	"get_login_info":                 getLoginInfo,
+	"get_friend_list":                getFriendList,
+	"get_unidirectional_friend_list": getUnidirectionalFriendList,
+	"delete_friend":                  deleteFriend,
+	"delete_unidirectional_friend":   deleteUnidirectionalFriend,
+	"get_group_list":                 getGroupList,
+	"get_group_info":                 getGroupInfo,
+	"get_group_member_list":          getGroupMemberList,
+	"get_group_member_info":          getGroupMemberInfo,
+	"send_msg":                       sendMSG,
+	"send_group_msg":                 sendGroupMSG,
+	"send_group_forward_msg":         sendGroupForwardMSG,
+	"send_private_msg":               sendPrivateMSG,
+	"delete_msg":                     deleteMSG,
+	"set_friend_add_request":         setFriendAddRequest,
+	"set_group_add_request":          setGroupAddRequest,
+	"set_group_card":                 setGroupCard,
+	"set_group_special_title":        setGroupSpecialTitle,
+	"set_group_kick":                 setGroupKick,
+	"set_group_ban":                  setGroupBan,
+	"set_group_whole_ban":            setGroupWholeBan,
+	"set_group_name":                 setGroupName,
+	"set_group_admin":                setGroupAdmin,
+	"_send_group_notice":             sendGroupNotice,
+	"set_group_leave":                setGroupLeave,
+	"get_image":                      getImage,
+	"get_forward_msg":                getForwardMSG,
+	"get_msg":                        getMSG,
+	"download_file":                  downloadFile,
+	"get_group_honor_info":           getGroupHonorInfo,
+	"set_restart":                    setRestart,
+	"can_send_image":                 canSendImage,
+	"can_send_record":                canSendRecord,
+	"get_stranger_info":              getStrangerInfo,
+	"get_status":                     getStatus,
+	"get_version_info":               getVersionInfo,
+	"get_group_system_msg":           getGroupSystemMSG,
+	"get_group_file_system_info":     getGroupFileSystemInfo,
+	"get_group_root_files":           getGroupRootFiles,
+	"get_group_files_by_folder":      getGroupFilesByFolder,
+	"get_group_file_url":             getGroupFileURL,
+	"create_group_file_folder":       groupFileCreateFolder,
+	"delete_group_folder":            deleteGroupFolder,
+	"delete_group_file":              deleteGroupFile,
+	"upload_group_file":              uploadGroupFile,
+	"get_group_msg_history":          getGroupMsgHistory,
+	"_get_vip_info":                  getVipInfo,
+	"reload_event_filter":            reloadEventFilter,
+	".ocr_image":                     ocrImage,
+	"ocr_image":                      ocrImage,
+	"get_group_at_all_remain":        getGroupAtAllRemain,
+	"get_online_clients":             getOnlineClients,
+	".get_word_slices":               getWordSlices,
+	"set_group_portrait":             setGroupPortrait,
+	"set_essence_msg":                setEssenceMSG,
+	"delete_essence_msg":             deleteEssenceMSG,
+	"get_essence_msg_list":           getEssenceMsgList,
+	"check_url_safely":               checkURLSafely,
+	"set_group_anonymous_ban":        setGroupAnonymousBan,
+	".handle_quick_operation":        handleQuickOperation,
+	"qidian_get_account_info":        getQiDianAccountInfo,
+	"_get_model_show":                getModelShow,
+	"_set_model_show":                setModelShow,
+	"mark_msg_as_read":               markMSGAsRead,
 }
 
 func (api *apiCaller) callAPI(action string, p resultGetter) coolq.MSG {
