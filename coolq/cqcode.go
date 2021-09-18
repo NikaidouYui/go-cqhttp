@@ -17,6 +17,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/gabriel-vasile/mimetype"
+
 	"github.com/Mrs4s/MiraiGo/binary"
 	"github.com/Mrs4s/MiraiGo/message"
 	"github.com/Mrs4s/MiraiGo/utils"
@@ -160,7 +162,11 @@ func ToArrayMessage(e []message.IMessageElement, groupID int64) (r []MSG) {
 		var m MSG
 		switch o := elem.(type) {
 		case *message.ReplyElement:
+<<<<<<< HEAD
 			if RemoveReplyAt && i+1 < len(e) {
+=======
+			if RemoveReplyAt && i+1 < len(e) && e[i+1].Type() == message.At {
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 				elem, ok := e[i+1].(*message.AtElement)
 				if ok && elem.Target == o.Sender {
 					e[i+1] = nil
@@ -214,7 +220,11 @@ func ToArrayMessage(e []message.IMessageElement, groupID int64) (r []MSG) {
 				"data": map[string]string{"file": o.Name, "url": o.Url},
 			}
 		case *message.GroupImageElement:
+<<<<<<< HEAD
 			data := map[string]string{"file": hex.EncodeToString(o.Md5) + ".image", "url": o.Url, "subType": strconv.FormatInt(int64(o.ImageBizType), 10)}
+=======
+			data := map[string]string{"file": hex.EncodeToString(o.Md5) + ".image", "url": o.Url}
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 			switch {
 			case o.Flash:
 				data["type"] = "flash"
@@ -331,7 +341,10 @@ func ToStringMessage(e []message.IMessageElement, groupID int64, isRaw ...bool) 
 			} else if o.EffectID != 0 {
 				arg = ",type=show,id=" + strconv.FormatInt(int64(o.EffectID), 10)
 			}
+<<<<<<< HEAD
 			arg += ",subType=" + strconv.FormatInt(int64(o.ImageBizType), 10)
+=======
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 			if ur {
 				write("[CQ:image,file=%s%s]", hex.EncodeToString(o.Md5)+".image", arg)
 			} else {
@@ -696,8 +709,11 @@ func (bot *CQBot) ToElement(t string, d map[string]string, isGroup bool) (m inte
 		case *message.GroupImageElement:
 			img.Flash = flash
 			img.EffectID = int32(id)
+<<<<<<< HEAD
 			i, _ := strconv.ParseInt(d["subType"], 10, 64)
 			img.ImageBizType = message.ImageBizType(i)
+=======
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 		case *message.FriendImageElement:
 			img.Flash = flash
 		}
@@ -737,6 +753,7 @@ func (bot *CQBot) ToElement(t string, d map[string]string, isGroup bool) (m inte
 			return nil, err
 		}
 		if !SkipMimeScan && !global.IsAMRorSILK(data) {
+<<<<<<< HEAD
 			mt := mimetype.Detect(data)
 			lawful := false
 			for _, lt := range lawfulAudioTypes {
@@ -747,6 +764,11 @@ func (bot *CQBot) ToElement(t string, d map[string]string, isGroup bool) (m inte
 			}
 			if !lawful {
 				return nil, errors.New("audio type error: " + mt.String())
+=======
+			mt := mimetype.Detect(data).String()
+			if !mimetype.EqualsAny(mt, lawfulAudioTypes...) {
+				return nil, errors.New("audio type error: " + mt)
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 			}
 		}
 		if !global.IsAMRorSILK(data) {

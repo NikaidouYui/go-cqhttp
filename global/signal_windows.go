@@ -18,9 +18,17 @@ import (
 	log "github.com/sirupsen/logrus"
 )
 
+<<<<<<< HEAD
 var validTasks = map[string]func(){
 	"dumpstack": dumpStack,
 }
+=======
+var (
+	validTasks = map[string]func(){
+		"dumpstack": dumpStack,
+	}
+)
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 
 // SetupMainSignalHandler is for main to use at last
 func SetupMainSignalHandler() <-chan struct{} {

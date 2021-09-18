@@ -55,7 +55,11 @@ var (
 )
 
 func main() {
+<<<<<<< HEAD
 	c := flag.String("c", config.DefaultConfigFile, "configuration filename")
+=======
+	c := flag.String("c", config.DefaultConfigFile, "configuration filename default is config.hjson")
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	d := flag.Bool("d", false, "running as a daemon")
 	h := flag.Bool("h", false, "this help")
 	wd := flag.String("w", "", "cover the working directory")
@@ -82,6 +86,7 @@ func main() {
 		codec.Debug = true
 	}
 
+<<<<<<< HEAD
 	rotateOptions := []rotatelogs.Option{
 		rotatelogs.WithRotationTime(time.Hour * 24),
 	}
@@ -90,6 +95,18 @@ func main() {
 		rotateOptions = append(rotateOptions, rotatelogs.WithMaxAge(time.Hour*24*time.Duration(conf.Output.LogAging)))
 	} else {
 		rotateOptions = append(rotateOptions, rotatelogs.WithMaxAge(time.Hour*24*365*10))
+=======
+	logFormatter := &easy.Formatter{
+		TimestampFormat: "2006-01-02 15:04:05",
+		LogFormat:       "[%time%] [%lvl%]: %msg% \n",
+	}
+	rotateOptions := []rotatelogs.Option{
+		rotatelogs.WithRotationTime(time.Hour * 24),
+	}
+
+	if conf.Output.LogAging > 0 {
+		rotateOptions = append(rotateOptions, rotatelogs.WithMaxAge(time.Hour*24*time.Duration(conf.Output.LogAging)))
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	}
 	if conf.Output.LogForceNew {
 		rotateOptions = append(rotateOptions, rotatelogs.ForceNewFile())
@@ -101,7 +118,11 @@ func main() {
 		panic(err)
 	}
 
+<<<<<<< HEAD
 	log.AddHook(global.NewLocalHook(w, global.LogFormat{}, global.GetLogLevel(conf.Output.LogLevel)...))
+=======
+	log.AddHook(global.NewLocalHook(w, logFormatter, global.GetLogLevel(conf.Output.LogLevel)...))
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 
 	mkCacheDir := func(path string, _type string) {
 		if !global.PathExists(path) {
@@ -637,7 +658,11 @@ func newClient() *client.QQClient {
 		log.Infof("检测到 address.txt 文件. 将覆盖目标IP.")
 		addr := global.ReadAddrFile("address.txt")
 		if len(addr) > 0 {
+<<<<<<< HEAD
 			c.SetCustomServer(addr)
+=======
+			cli.SetCustomServer(addr)
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 		}
 		log.Infof("读取到 %v 个自定义地址.", len(addr))
 	}

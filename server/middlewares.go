@@ -75,6 +75,7 @@ func longPolling(bot *coolq.CQBot, maxSize int) handler {
 		if action != "get_updates" {
 			return nil
 		}
+<<<<<<< HEAD
 		var (
 			ok      int32
 			ch      = make(chan []interface{}, 1)
@@ -109,5 +110,21 @@ func longPolling(bot *coolq.CQBot, maxSize int) handler {
 			}
 		}
 		return coolq.OK(<-ch)
+=======
+		mutex.Lock()
+		defer mutex.Unlock()
+		if queue.Len() == 0 {
+			cond.Wait()
+		}
+		limit := int(p.Get("limit").Int())
+		if limit <= 0 || queue.Len() < limit {
+			limit = queue.Len()
+		}
+		ret := make([]interface{}, limit)
+		for i := 0; i < limit; i++ {
+			ret[i] = queue.Remove(queue.Front())
+		}
+		return coolq.OK(ret)
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	}
 }

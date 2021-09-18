@@ -18,7 +18,6 @@ import (
 	"github.com/Mrs4s/MiraiGo/binary"
 	"github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
-	"github.com/Mrs4s/MiraiGo/utils"
 	log "github.com/sirupsen/logrus"
 	"github.com/tidwall/gjson"
 
@@ -406,7 +405,27 @@ func (bot *CQBot) CQSendGroupMessage(groupID int64, m gjson.Result, autoEscape b
 					at.Display = "@" + strconv.FormatInt(at.Target, 10)
 				}
 			}
+<<<<<<< HEAD
 		}
+=======
+		}
+	}
+
+	if m.Type == gjson.JSON {
+		elem := bot.ConvertObjectMessage(m, true)
+		fixAt(elem)
+		mid := bot.SendGroupMessage(groupID, &message.SendingMessage{Elements: elem})
+		if mid == -1 {
+			return Failed(100, "SEND_MSG_API_ERROR", "请参考 go-cqhttp 端输出")
+		}
+		log.Infof("发送群 %v(%v) 的消息: %v (%v)", group.Name, groupID, limitedString(ToStringMessage(elem, groupID)), mid)
+		return OK(MSG{"message_id": mid})
+	}
+	str := m.String()
+	if str == "" {
+		log.Warn("群消息发送失败: 信息为空.")
+		return Failed(100, "EMPTY_MSG_ERROR", "消息为空")
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	}
 
 	var elem []message.IMessageElement
@@ -447,6 +466,7 @@ func (bot *CQBot) CQSendGroupForwardMessage(groupID int64, m gjson.Result) MSG {
 		if item.Get("data.uin").Exists() || item.Get("data.user_id").Exists() {
 			hasCustom = true
 			return false
+<<<<<<< HEAD
 		}
 		return true
 	})
@@ -468,6 +488,14 @@ func (bot *CQBot) CQSendGroupForwardMessage(groupID int64, m gjson.Result) MSG {
 
 	var convert func(e gjson.Result) *message.ForwardNode
 	convert = func(e gjson.Result) *message.ForwardNode {
+=======
+		}
+		return true
+	})
+
+	var convert func(e gjson.Result) []*message.ForwardNode
+	convert = func(e gjson.Result) (nodes []*message.ForwardNode) {
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 		if e.Get("type").Str != "node" {
 			return nil
 		}
@@ -504,7 +532,11 @@ func (bot *CQBot) CQSendGroupForwardMessage(groupID int64, m gjson.Result) MSG {
 			nested := false
 			c.ForEach(func(_, value gjson.Result) bool {
 				if value.Get("type").Str == "node" {
+<<<<<<< HEAD
 					nested = true
+=======
+					flag = true
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 					return false
 				}
 				return true
@@ -528,7 +560,24 @@ func (bot *CQBot) CQSendGroupForwardMessage(groupID int64, m gjson.Result) MSG {
 		}
 		content := bot.ConvertObjectMessage(e.Get("data.content"), true)
 		if uin != 0 && name != "" && len(content) > 0 {
+<<<<<<< HEAD
 			return &message.ForwardNode{
+=======
+			var newElem []message.IMessageElement
+			for _, elem := range content {
+				switch elem.(type) {
+				case *LocalImageElement, *LocalVideoElement:
+					gm, err := bot.uploadMedia(elem, groupID, true)
+					if err != nil {
+						log.Warnf("警告: 群 %d %s上传失败: %v", groupID, elem.Type().String(), err)
+						continue
+					}
+					elem = gm
+				}
+				newElem = append(newElem, elem)
+			}
+			nodes = append(nodes, &message.ForwardNode{
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 				SenderId:   uin,
 				SenderName: name,
 				Time:       int32(msgTime),
@@ -536,7 +585,11 @@ func (bot *CQBot) CQSendGroupForwardMessage(groupID int64, m gjson.Result) MSG {
 			}
 		}
 		log.Warnf("警告: 非法 Forward node 将跳过. uin: %v name: %v content count: %v", uin, name, len(content))
+<<<<<<< HEAD
 		return nil
+=======
+		return
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	}
 	if m.IsArray() {
 		for _, item := range m.Array() {
@@ -569,6 +622,22 @@ func (bot *CQBot) CQSendGroupForwardMessage(groupID int64, m gjson.Result) MSG {
 //
 // https://git.io/Jtz1l
 func (bot *CQBot) CQSendPrivateMessage(userID int64, groupID int64, m gjson.Result, autoEscape bool) MSG {
+<<<<<<< HEAD
+=======
+	if m.Type == gjson.JSON {
+		elem := bot.ConvertObjectMessage(m, false)
+		mid := bot.SendPrivateMessage(userID, groupID, &message.SendingMessage{Elements: elem})
+		if mid == -1 {
+			return Failed(100, "SEND_MSG_API_ERROR", "请参考 go-cqhttp 端输出")
+		}
+		log.Infof("发送好友 %v(%v)  的消息: %v (%v)", userID, userID, limitedString(m.String()), mid)
+		return OK(MSG{"message_id": mid})
+	}
+	str := m.String()
+	if str == "" {
+		return Failed(100, "EMPTY_MSG_ERROR", "消息为空")
+	}
+>>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	var elem []message.IMessageElement
 	if m.Type == gjson.JSON {
 		elem = bot.ConvertObjectMessage(m, false)
