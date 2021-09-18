@@ -20,21 +20,10 @@ import (
 	"github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
 	"github.com/Mrs4s/MiraiGo/utils"
-<<<<<<< HEAD
-=======
-	jsoniter "github.com/json-iterator/go"
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/syndtr/goleveldb/leveldb"
 	"github.com/syndtr/goleveldb/leveldb/opt"
-<<<<<<< HEAD
-=======
-
-	"github.com/Mrs4s/go-cqhttp/global"
-	"github.com/Mrs4s/go-cqhttp/global/config"
-)
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 
 	"github.com/Mrs4s/go-cqhttp/global"
 	"github.com/Mrs4s/go-cqhttp/global/config"
@@ -89,7 +78,6 @@ var ForceFragmented = false
 // SkipMimeScan 是否跳过Mime扫描
 var SkipMimeScan bool
 
-<<<<<<< HEAD
 // keep sync with /docs/file.md#MINE
 var lawfulImageTypes = [...]string{
 	"image/bmp",
@@ -111,14 +99,6 @@ var lawfulAudioTypes = [...]string{
 	"audio/ogg",
 	"audio/wav",
 	"audio/x-m4a",
-=======
-var lawfulImageTypes = []string{"image/png", "image/jpeg", "image/gif", "image/bmp"}
-
-var lawfulAudioTypes = []string{
-	"audio/mpeg", "audio/flac", "audio/midi", "audio/ogg",
-	"audio/ape", "audio/amr", "audio/wav", "audio/aiff",
-	"audio/mp4", "audio/aac", "audio/x-m4a",
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 }
 
 // NewQQBot 初始化一个QQBot实例
@@ -230,7 +210,6 @@ func (bot *CQBot) UploadLocalImageAsGroup(groupCode int64, img *LocalImageElemen
 		}
 		defer func() { _ = f.Close() }()
 		img.Stream = f
-<<<<<<< HEAD
 	}
 	if lawful, mime := IsLawfulImage(img.Stream); !lawful {
 		return nil, errors.New("image type error: " + mime)
@@ -240,17 +219,6 @@ func (bot *CQBot) UploadLocalImageAsGroup(groupCode int64, img *LocalImageElemen
 		i.Flash = img.Flash
 		i.EffectID = img.EffectID
 	}
-=======
-	}
-	if lawful, mime := IsLawfulImage(img.Stream); !lawful {
-		return nil, errors.New("image type error: " + mime)
-	}
-	i, err = bot.Client.UploadGroupImage(groupCode, img.Stream)
-	if i != nil {
-		i.Flash = img.Flash
-		i.EffectID = img.EffectID
-	}
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	return
 }
 
@@ -270,7 +238,6 @@ func (bot *CQBot) UploadLocalVideo(target int64, v *LocalVideoElement) (*message
 
 // UploadLocalImageAsPrivate 上传本地图片至私聊
 func (bot *CQBot) UploadLocalImageAsPrivate(userID int64, img *LocalImageElement) (i *message.FriendImageElement, err error) {
-<<<<<<< HEAD
 	if img.File != "" {
 		f, err := os.Open(img.File)
 		if err != nil {
@@ -286,23 +253,6 @@ func (bot *CQBot) UploadLocalImageAsPrivate(userID int64, img *LocalImageElement
 	if i != nil {
 		i.Flash = img.Flash
 	}
-=======
-	if img.Stream != nil {
-		i, err = bot.Client.UploadPrivateImage(userID, img.Stream)
-	} else {
-		// need update.
-		f, e := os.Open(img.File)
-		if e != nil {
-			return nil, e
-		}
-		defer f.Close()
-		i, err = bot.Client.UploadPrivateImage(userID, f)
-	}
-
-	if i != nil {
-		i.Flash = img.Flash
-	}
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 	return
 }
 
@@ -363,11 +313,7 @@ func (bot *CQBot) SendPrivateMessage(target int64, groupID int64, m *message.Sen
 	for _, e := range m.Elements {
 		switch i := e.(type) {
 		case *LocalImageElement, *message.VoiceElement, *LocalVideoElement:
-<<<<<<< HEAD
 			i, err := bot.uploadMedia(i, target, false)
-=======
-			i, err := bot.uploadMedia(i, groupID, false)
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 			if err != nil {
 				log.Warnf("警告: 私聊 %d 消息%s上传失败: %v", target, e.Type().String(), err)
 				continue
@@ -377,11 +323,7 @@ func (bot *CQBot) SendPrivateMessage(target int64, groupID int64, m *message.Sen
 			bot.Client.SendFriendPoke(i.Target)
 			return 0
 		case *message.MusicShareElement:
-<<<<<<< HEAD
 			bot.Client.SendFriendMusicShare(target, i)
-=======
-			bot.Client.SendFriendMusicShare(groupID, i)
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 			return 0
 		}
 		newElem = append(newElem, e)
@@ -690,15 +632,10 @@ func IsLawfulImage(r io.ReadSeeker) (bool, string) {
 		log.Debugf("扫描 Mime 时出现问题: %v", err)
 		return false, ""
 	}
-<<<<<<< HEAD
 	for _, lt := range lawfulImageTypes {
 		if t.Is(lt) {
 			return true, t.String()
 		}
 	}
 	return false, t.String()
-=======
-	mime := t.String()
-	return mimetype.EqualsAny(mime, lawfulImageTypes...), mime
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 }

@@ -96,7 +96,6 @@ func SetAtDefault(variable, value, defaultValue interface{}) {
 	if v.Kind() != reflect.Ptr || v.IsNil() {
 		return
 	}
-<<<<<<< HEAD
 	v = v.Elem()
 	if v.Interface() != defaultValue {
 		return
@@ -105,15 +104,6 @@ func SetAtDefault(variable, value, defaultValue interface{}) {
 		return
 	}
 	v.Set(v2)
-=======
-	if v.Elem().Interface() != defaultValue {
-		return
-	}
-	if v.Elem().Kind() != v2.Kind() {
-		return
-	}
-	v.Elem().Set(v2)
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 }
 
 // SetExcludeDefault 在目标值 value 不为默认值 defaultValue 时修改 variable 为 value
@@ -123,7 +113,6 @@ func SetExcludeDefault(variable, value, defaultValue interface{}) {
 	if v.Kind() != reflect.Ptr || v.IsNil() {
 		return
 	}
-<<<<<<< HEAD
 	v = v.Elem()
 	if reflect.Indirect(v2).Interface() != defaultValue {
 		return
@@ -132,15 +121,6 @@ func SetExcludeDefault(variable, value, defaultValue interface{}) {
 		return
 	}
 	v.Set(v2)
-=======
-	if v2.Elem().Interface() != defaultValue {
-		return
-	}
-	if v.Elem().Kind() != v2.Kind() {
-		return
-	}
-	v.Elem().Set(v2)
->>>>>>> 335ab5a6682e80d739b35a0462b23588f60c6558
 }
 
 var (
