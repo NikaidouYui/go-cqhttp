@@ -1,4 +1,5 @@
 FROM golang:1.17-alpine AS builder
+FROM jrottenberg/ffmpeg
 
 RUN go env -w GO111MODULE=auto \
   && go env -w CGO_ENABLED=0 \
