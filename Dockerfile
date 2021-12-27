@@ -12,7 +12,7 @@ RUN set -ex \
     && cd /build \
     && go build -ldflags "-s -w -extldflags '-static'" -o cqhttp
 
-FROM jrottenberg/ffmpeg
+FROM aRUN apk add --no-cache ffmpeg
 
 RUN apk add --COPY --from=builder /build/cqhttp /usr/bin/cqhttp
 RUN chmod +x /usr/bin/cqhttp
