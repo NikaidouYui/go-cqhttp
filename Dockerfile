@@ -12,9 +12,11 @@ RUN set -ex \
     && cd /build \
     && go build -ldflags "-s -w -extldflags '-static'" -o cqhttp
 
-FROM aRUN apk add --no-cache ffmpeg
+FROM alpine:latest
 
-RUN apk add --COPY --from=builder /build/cqhttp /usr/bin/cqhttp
+RUN apk add --no-cache ffmpeg
+
+COPY --from=builder /build/cqhttp /usr/bin/cqhttp
 RUN chmod +x /usr/bin/cqhttp
 
 WORKDIR /data
