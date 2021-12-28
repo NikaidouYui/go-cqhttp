@@ -11,7 +11,7 @@ import (
 	"github.com/Mrs4s/MiraiGo/client"
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
-	"github.com/tuotoo/qrcode"
+	"github.com/skip2/go-qrcode"
 	"github.com/Mrs4s/go-cqhttp/global"
 )
 
