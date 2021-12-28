@@ -12,7 +12,6 @@ import (
 	"github.com/pkg/errors"
 	log "github.com/sirupsen/logrus"
 	"github.com/tuotoo/qrcode"
-
 	"github.com/Mrs4s/go-cqhttp/global"
 )
 
